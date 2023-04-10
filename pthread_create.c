@@ -61,8 +61,9 @@ main(int argc, char *argv[])
         * If such a character is followed by a colon, the option requires an argument, 
         * so getopt() places a pointer to the following text in the same argv-element, 
         * or the text of the following argv-element in optarg.
-        *  If an option was successfully found, then getopt() returns the option character. 
-        *  If all command-line options have been parsed, then getopt() returns -1.
+        * If an option was successfully found, then getopt() returns the option character. 
+        * If all command-line options have been parsed, then getopt() returns -1.
+        * the next call to getopt() can resume the scan with the following option character or argv-element
         */
         switch (opt) {
         case 's':
@@ -78,15 +79,23 @@ main(int argc, char *argv[])
     }
 
            num_threads = argc - optind;
+           // The variable optind is the index of the next element to be processed in argv.
 
            /* Initialize thread creation attributes. */
 
            s = pthread_attr_init(&attr);
+           // int pthread_attr_init(pthread_attr_t *attr);
+           // initializes the thread attributes object pointed to by attr with default attribute
+           // values. 
+           // On success, return 0;
            if (s != 0)
                handle_error_en(s, "pthread_attr_init");
 
            if (stack_size > 0) {
                s = pthread_attr_setstacksize(&attr, stack_size);
+               // int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize);
+               // sets the stack size
+               // On success, return 0;
                if (s != 0)
                    handle_error_en(s, "pthread_attr_setstacksize");
            }
@@ -94,6 +103,9 @@ main(int argc, char *argv[])
            /* Allocate memory for pthread_create() arguments. */
 
            struct thread_info *tinfo = (thread_info*)calloc(num_threads, sizeof(*tinfo));
+           // void *calloc( size_t num, size_t size );
+           // Allocates memory for an array of num objects of size and 
+           // initializes all bytes in the allocated storage to zero. 
            if (tinfo == NULL)
                handle_error("calloc");
 
