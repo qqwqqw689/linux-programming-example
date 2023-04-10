@@ -1,3 +1,5 @@
+// https://man7.org/linux/man-pages/man3/pthread_create.3.html
+
 #include <pthread.h>
 #include <string.h>
 #include <stdio.h>
@@ -41,6 +43,8 @@ thread_start(void *arg)
 int
 main(int argc, char *argv[])
 {
+    // argc : the number of arguments passed to the program
+    // argv : Pointer to the first element of an array of argc + 1 pointers
     int s, opt, num_threads;
     pthread_attr_t attr;
     ssize_t stack_size;
@@ -52,15 +56,19 @@ main(int argc, char *argv[])
     while ((opt = getopt(argc, argv, "s:")) != -1) {
         // int getopt(int argc, char * const argv[], const char *optstring);
         /*
+        * An element of argv that starts with '-' is an option element
         * optstring is a string containing the legitimate option characters. 
         * If such a character is followed by a colon, the option requires an argument, 
-        * so getopt() places a pointer to the following text in the same argv-element, or the text of the following argv-element, 
-        * in optarg.
+        * so getopt() places a pointer to the following text in the same argv-element, 
+        * or the text of the following argv-element in optarg.
+        *  If an option was successfully found, then getopt() returns the option character. 
+        *  If all command-line options have been parsed, then getopt() returns -1.
         */
         switch (opt) {
         case 's':
             stack_size = strtoul(optarg, NULL, 0);
-            // strtoul : Convert string to unsigned long integer
+            // unsigned long int strtoul (const char* str, char** endptr, int base);
+            // Convert string to unsigned long integer
             break;
 
         default:
