@@ -120,6 +120,19 @@ main(int argc, char *argv[])
 
                s = pthread_create(&tinfo[tnum].thread_id, &attr,
                                   &thread_start, &tinfo[tnum]);
+                /*
+                int pthread_create(pthread_t *restrict thread,
+                        const pthread_attr_t *restrict attr,
+                        void *(*start_routine)(void *),
+                        void *restrict arg);
+
+                The new thread starts execution by invoking
+                start_routine(); arg is passed as the sole argument of
+                start_routine().
+                
+                attr - determine attributes for the new thread
+
+                */
                if (s != 0)
                    handle_error_en(s, "pthread_create");
            }
@@ -135,6 +148,10 @@ main(int argc, char *argv[])
 
            for (int tnum = 0; tnum < num_threads; tnum++) {
                s = pthread_join(tinfo[tnum].thread_id, &res);
+               // void *res;
+               // int pthread_join(pthread_t thread, void **retval);
+               // The pthread_join() function waits for the thread specified by thread to terminate.
+               // res -> the return of function thread_start 
                if (s != 0)
                    handle_error_en(s, "pthread_join");
 
