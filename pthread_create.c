@@ -25,7 +25,8 @@ struct thread_info {    /* Used as argument to thread_start() */
 static void *
 thread_start(void *arg)
 {
-    struct thread_info *tinfo = (thread_info*)arg;
+    struct thread_info *tinfo = (struct thread_info*)arg;
+    // struct thread_info* !!!
     char *uargv;
 
     printf("Thread %d: top of stack near %p; argv_string=%s\n", tinfo->thread_num, (void *) &tinfo, tinfo->argv_string);
@@ -102,7 +103,7 @@ main(int argc, char *argv[])
 
            /* Allocate memory for pthread_create() arguments. */
 
-           struct thread_info *tinfo = (thread_info*)calloc(num_threads, sizeof(*tinfo));
+           struct thread_info *tinfo = (struct thread_info*)calloc(num_threads, sizeof(*tinfo));
            // void *calloc( size_t num, size_t size );
            // Allocates memory for an array of num objects of size and 
            // initializes all bytes in the allocated storage to zero. 
