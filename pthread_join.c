@@ -13,6 +13,10 @@ void *thread(void *arg) {
   }
   strcpy(ret, "This is a test");
   pthread_exit(ret);
+  // noreturn void pthread_exit(void *retval);
+  // The pthread_exit() function terminates the calling thread and
+  // returns a value via retval that (if the thread is joinable) is
+  // available to another thread in the same process that calls pthread_join(3).
 }
 
 main() {
