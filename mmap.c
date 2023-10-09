@@ -11,7 +11,7 @@
 int main(int argc, char *argv[])
 {
     int          fd;
-    char         *addr;
+    void         *addr;
     off_t        offset, pa_offset;
     size_t       length;
     ssize_t      s;
