@@ -11,7 +11,7 @@
 int main(int argc, char *argv[])
 {
     int          fd;
-    void         *addr;
+    char         *addr;
     off_t        offset, pa_offset;
     size_t       length;
     ssize_t      s;
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
         length = sb.st_size - offset;
     }
 
-    addr = mmap(NULL, length + offset - pa_offset, PROT_READ,
+    addr = ()mmap(NULL, length + offset - pa_offset, PROT_READ,
                 MAP_PRIVATE, fd, pa_offset);
     // NULL: the kernel chooses the (page-aligned),address at which to create the mapping
     // PROT_READ: Pages may be read.
