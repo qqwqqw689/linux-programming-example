@@ -7,6 +7,9 @@
 #include <unistd.h>
 #include <wait.h>
 
+// perror - print a system error message
+// errno - number of last error
+
 #define errExit(msg)    do { perror(msg); \
                              exit(EXIT_FAILURE); } while (0)
 
