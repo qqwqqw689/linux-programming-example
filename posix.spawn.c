@@ -35,6 +35,8 @@ int main(int argc, char *argv[])
     attrp = NULL;
     file_actionsp = NULL;
 
+    // getopt() function parses the command-line arguments
+
     while ((opt = getopt(argc, argv, "sc")) != -1) {
         switch (opt) {
         case 'c':       /* -c: close standard output in child */
@@ -42,6 +44,7 @@ int main(int argc, char *argv[])
             /* Create a file actions object and add a "close"
                action to it. */
 
+            // int posix_spawn_file_actions_init(posix_spawn_file_actions_t *file_actions);
             s = posix_spawn_file_actions_init(&file_actions);
             if (s != 0)
                 errExitEN(s, "posix_spawn_file_actions_init");
