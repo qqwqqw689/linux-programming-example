@@ -45,10 +45,19 @@ int main(int argc, char *argv[])
                action to it. */
 
             // int posix_spawn_file_actions_init(posix_spawn_file_actions_t *file_actions);
+            // Upon successful completion, function shall return zero;
+            // otherwise, an error number shall be returned to indicate the error.
             s = posix_spawn_file_actions_init(&file_actions);
             if (s != 0)
                 errExitEN(s, "posix_spawn_file_actions_init");
 
+            // int posix_spawn_file_actions_addclose(posix_spawn_file_actions_t *
+            // file_actions, int fildes);
+            // STDOUT_FILENO ： Standard output
+            // The posix_spawn_file_actions_addclose() function shall add a close action
+            // to the object referenced by file_actions that shall cause the file descriptor
+            // fildes to be closed (as if close(fildes) had been called) when a new
+            // process is spawned using this file actions object.
             s = posix_spawn_file_actions_addclose(&file_actions,
                                                          STDOUT_FILENO);
             if (s != 0)
@@ -65,6 +74,10 @@ int main(int argc, char *argv[])
             s = posix_spawnattr_init(&attr);
             if (s != 0)
                 errExitEN(s, "posix_spawnattr_init");
+
+            // POSIX_SPAWN_SETSIGMASK
+            // Set the signal mask to the signal set specified in the
+            // spawn-sigmask attribute of the object pointed to by attrp.
             s = posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETSIGMASK);
             if (s != 0)
                 errExitEN(s, "posix_spawnattr_setflags");
