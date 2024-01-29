@@ -71,6 +71,10 @@ int main(int argc, char *argv[])
             /* Create an attributes object and add a "set signal mask"
                action to it. */
 
+            // int posix_spawnattr_init(posix_spawnattr_t *attr);
+            // The posix_spawnattr_init() function shall initialize
+            // a spawn attributes object attr with the default value for all
+            // of the individual attributes used by the implementation.
             s = posix_spawnattr_init(&attr);
             if (s != 0)
                 errExitEN(s, "posix_spawnattr_init");
@@ -78,11 +82,25 @@ int main(int argc, char *argv[])
             // POSIX_SPAWN_SETSIGMASK
             // Set the signal mask to the signal set specified in the
             // spawn-sigmask attribute of the object pointed to by attrp.
+
+            // int posix_spawnattr_setflags(posix_spawnattr_t *attr, short flags);
+            // The posix_spawnattr_setflags() function shall set the spawn-flags attribute
+            // in an initialized attributes object referenced by attr.
+            // The spawn-flags attribute is used to indicate which process attributes are
+            // to be changed in the new process image when invoking posix_spawn()
             s = posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETSIGMASK);
             if (s != 0)
                 errExitEN(s, "posix_spawnattr_setflags");
-
+            
+            // int sigfillset(sigset_t *set);
+            // initialize and fill a signal set
+            // all signals defined in this volume of POSIX.1‐2017 are included
             sigfillset(&mask);
+
+            // int posix_spawnattr_setsigmask(posix_spawnattr_t *restrict attr,
+            // const sigset_t *restrict sigmask);
+            // The posix_spawnattr_setsigmask() function shall set the spawn-sigmask
+            // attribute in an initialized attributes object referenced by attr.
             s = posix_spawnattr_setsigmask(&attr, &mask);
             if (s != 0)
                 errExitEN(s, "posix_spawnattr_setsigmask");
@@ -120,15 +138,35 @@ int main(int argc, char *argv[])
     }
 
     printf("PID of child: %jd\n", (intmax_t) child_pid);
+    // intmax_t: Integer type with the maximum width supported.
 
     /* Monitor status of the child until it terminates. */
 
     do {
         s = waitpid(child_pid, &status, WUNTRACED | WCONTINUED);
+        // pid_t waitpid(pid_t pid, int *status, int options);
+        // wait for state changes in a child of the calling process,
+        // and obtain information about the child whose state has changed.
+        // WUNTRACED: return if a child has stopped
+        // WCONTINUED：return if a stopped child has been resumed by delivery of SIGCONT.
+        // SIGCONT tells LINUX to resume the process paused earlier
         if (s == -1)
             errExit("waitpid");
 
         printf("Child status: ");
+
+        // WIFEXITED: determines whether the child process ended normally.
+        // WEXITSTATUS:  If the WIFEXITED macro indicates that the child process exited normally,
+        // the WEXITSTATUS macro returns the exit code specified by the child process.
+        // WIFSIGNALED: It determines if the child process exited because it raised a signal
+        // that caused it to exit.
+        // WTERMSIG: This macro queries the termination status of a child process
+        // to determine which signal caused the child process to exit.
+        // WIFSTOPPED: This macro evaluates to a nonzero (true) value 
+        // if the child process is currently stopped.
+        // WSTOPSIG: this macro returns the signal number of the signal that caused
+        // the child process to stop.
+        // WIFCONTINUED: returns true if the child process was resumed by delivery of SIGCONT.
         if (WIFEXITED(status)) {
             printf("exited, status=%d\n", WEXITSTATUS(status));
         } else if (WIFSIGNALED(status)) {
