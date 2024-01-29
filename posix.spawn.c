@@ -99,6 +99,9 @@ int main(int argc, char *argv[])
 
     s = posix_spawnp(&child_pid, argv[optind], file_actionsp, attrp,
                      &argv[optind], environ);
+
+    // The variable optind is the index of the next element to be processed in argv.
+    // (getopt)          
     if (s != 0)
         errExitEN(s, "posix_spawn");
 
