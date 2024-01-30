@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
     if (fd == -1)
         handle_error("open");
 
+    // int stat(const char *path, struct stat *buf);
     if (fstat(fd, &sb) == -1)           /* To obtain file size */
         handle_error("fstat");
 
@@ -39,6 +40,7 @@ int main(int argc, char *argv[])
     // Determines the value of a configurable system option.
     // _SC_PAGE_SIZE: Returns the current page size in bytes.
 
+    // st_size:  total size, in bytes
     if (offset >= sb.st_size) {
         fprintf(stderr, "offset is past end of file\n");
         exit(EXIT_FAILURE);
@@ -54,7 +56,7 @@ int main(int argc, char *argv[])
         length = sb.st_size - offset;
     }
 
-    addr = ()mmap(NULL, length + offset - pa_offset, PROT_READ,
+    addr = mmap(NULL, length + offset - pa_offset, PROT_READ,
                 MAP_PRIVATE, fd, pa_offset);
     // NULL: the kernel chooses the (page-aligned),address at which to create the mapping
     // PROT_READ: Pages may be read.
