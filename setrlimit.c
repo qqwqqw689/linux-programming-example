@@ -1,5 +1,13 @@
 #define _GNU_SOURCE
+/*
+If you define this macro, everything is included: ISO C89, ISO C99, 
+POSIX.1, POSIX.2, BSD, SVID, X/Open, LFS, and GNU extensions.
+*/
 #define _FILE_OFFSET_BITS 64
+/*
+This macro determines which file system interface 
+shall be used, one replacing the other. 
+*/
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
