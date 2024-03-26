@@ -9,7 +9,9 @@ int main(int argc, char *argv[])
     pid_t cpid, w;
     int wstatus;
     cpid = fork();
+    // fork - create a child process
     // On success, the PID of the child process is returned in the parent, and 0 is returned in the child.
+    // On failure, -1 is returned in the parent, no child process is created
     if (cpid == -1) {
         perror("fork");
         exit(EXIT_FAILURE);
@@ -41,6 +43,21 @@ int main(int argc, char *argv[])
                 perror("waitpid");
                 exit(EXIT_FAILURE);
             }
+
+            // WIFEXITED(status)
+            // returns true if the child terminated normally
+            // WEXITSTATUS(status)
+            // returns the exit status of the child. 
+            // WIFSIGNALED(status)
+            // returns true if the child process was terminated by a signal.
+            // WTERMSIG(status)
+            // returns the number of the signal that caused the child process to terminate. 
+            // WIFSTOPPED(status)
+            // returns true if the child process was stopped by delivery of a signal.
+            // WSTOPSIG(status)
+            // returns the number of the signal which caused the child to stop.
+            // WIFCONTINUED(status)
+            // returns true if the child process was resumed by delivery of SIGCONT.
             if (WIFEXITED(wstatus)) {
                 printf("exited, status=%d\n", WEXITSTATUS(wstatus));
             } else if (WIFSIGNALED(wstatus)) {
@@ -56,7 +73,11 @@ int main(int argc, char *argv[])
 }
 
 /*
- $ ./a.out &
+& ：This symbol is used to put the command in the background
+-STOP : SIGSTOP signal
+-CONT : SIGCONT signal
+-TERM : SIGTERM signal
+ $      ./a.out &
            Child PID is 32360
            [1] 32359
            $ kill -STOP 32360
