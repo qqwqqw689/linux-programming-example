@@ -19,12 +19,15 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
+    // unsigned int major(dev_t dev)
+    // unsigned int minor(dev_t dev)
     printf("ID of containing device:  [%x,%x]\n",
            major(sb.st_dev),
            minor(sb.st_dev));
 
     printf("File type:                ");
 
+    // S_IFMT : a bit mask used to extract the file type code from a mode value
     switch (sb.st_mode & S_IFMT) {
     case S_IFBLK:  printf("block device\n");            break;
     case S_IFCHR:  printf("character device\n");        break;
