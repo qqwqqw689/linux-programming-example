@@ -1,6 +1,3 @@
-/* CELEBP14 */                                   
-#define _OPEN_THREADS
-//  the remainder of the thread-related functions behave according to the POSIX.4a                                                 
 #include <errno.h>                                                              
 #include <pthread.h>                                                            
 #include <stdio.h>                                                              

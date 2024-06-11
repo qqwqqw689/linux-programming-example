@@ -1,12 +1,11 @@
-/* CELEBP32 */
-#define _OPEN_THREADS
 #include <pthread.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 
 void *thread(void *arg) {
   char *ret;
-  printf("thread() entered with argument '%s'\n", arg);
+  printf("thread() entered with argument '%s'\n", (char*)arg);
   if ((ret = (char*) malloc(20)) == NULL) {
     perror("malloc() error");
     exit(2);
@@ -19,7 +18,7 @@ void *thread(void *arg) {
   // available to another thread in the same process that calls pthread_join(3).
 }
 
-main() {
+int main() {
   pthread_t thid;
   void *ret;
 
@@ -33,5 +32,5 @@ main() {
     exit(3);
   }
 
-  printf("thread exited with '%s'\n", ret);
+  printf("thread exited with '%s'\n", (char*)ret);
 }
