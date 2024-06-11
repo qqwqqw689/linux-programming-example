@@ -1,7 +1,7 @@
 #include <pthread.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+#include <stdlib.h> // malloc
+#include <string.h> // strcpy
+#include <stdio.h> // perror
 
 void *thread(void *arg) {
   char *ret;
