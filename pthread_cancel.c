@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     exit(4);                                                                     
   }                                                                              
                                                                                  
-  if ( status == (int *)-1 )                                                     
+  if ( status == PTHREAD_CANCELED )                                                     
     puts("thread was cancelled");                                                
   else                                                                           
     puts("thread was not cancelled");                                            
