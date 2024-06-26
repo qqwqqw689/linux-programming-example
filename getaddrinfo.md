@@ -27,6 +27,10 @@
                exit(EXIT_FAILURE);
            }
 
+        /* If the AI_PASSIVE flag is specified in hints.ai_flags, and node
+           is NULL, then the returned socket addresses will be suitable for
+           bind(2)ing a socket that will accept(2) connections. 
+        */
            memset(&hints, 0, sizeof(hints));
            hints.ai_family = AF_UNSPEC;    /* Allow IPv4 or IPv6 */
            hints.ai_socktype = SOCK_DGRAM; /* Datagram socket */
@@ -34,7 +38,7 @@
            hints.ai_protocol = 0;          /* Any protocol */
            hints.ai_canonname = NULL;
            hints.ai_addr = NULL;
-           hints.ai_next = NULL;
+           hints.ai_next = NULL;           /*A pointer to the socket address is placed in the ai_addr field*/
 
            s = getaddrinfo(NULL, argv[1], &hints, &result);
            if (s != 0) {
@@ -45,7 +49,8 @@
            /* getaddrinfo() returns a list of address structures.
               Try each address until we successfully bind(2).
               If socket(2) (or bind(2)) fails, we (close the socket
-              and) try the next address. */
+              and) try the next address.The items in the linked list
+              are linked by the ai_next field. */
 
            for (rp = result; rp != NULL; rp = rp->ai_next) {
                sfd = socket(rp->ai_family, rp->ai_socktype,
@@ -76,10 +81,13 @@
                                 (struct sockaddr *) &peer_addr, &peer_addrlen);
                if (nread == -1)
                    continue;               /* Ignore failed request */
-
+                /* getnameinfo - address-to-name translation in protocol-independent manner*/
                s = getnameinfo((struct sockaddr *) &peer_addr,
                                peer_addrlen, host, NI_MAXHOST,
                                service, NI_MAXSERV, NI_NUMERICSERV);
+                               // #define NI_MAXHOST      1025
+                               // #define NI_MAXSERV      32
+                               // NI_NUMERICSERV : If set, then the numeric form of the service address is returned.
                if (s == 0)
                    printf("Received %zd bytes from %s:%s\n",
                           nread, host, service);
