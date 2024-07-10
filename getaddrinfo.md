@@ -35,6 +35,11 @@
            hints.ai_family = AF_UNSPEC;    /* Allow IPv4 or IPv6 */
            hints.ai_socktype = SOCK_DGRAM; /* Datagram socket */
            hints.ai_flags = AI_PASSIVE;    /* For wildcard IP address */
+           /*
+           If the AI_PASSIVE flag is specified in hints.ai_flags,
+           and node is NULL, then the returned socket addresses will be suitable for
+           bind(2)ing a socket that will accept(2) connections.
+           */
            hints.ai_protocol = 0;          /* Any protocol */
            hints.ai_canonname = NULL;
            hints.ai_addr = NULL;
@@ -57,7 +62,12 @@
                             rp->ai_protocol);
                if (sfd == -1)
                    continue;
-
+                /*
+                When a socket is created with socket(2), it exists in a name
+                space (address family) but has no address assigned to it.  bind()
+                assigns the address specified by addr to the socket referred to
+                by the file descriptor sfd.
+                */
                if (bind(sfd, rp->ai_addr, rp->ai_addrlen) == 0)
                    break;                  /* Success */
 
