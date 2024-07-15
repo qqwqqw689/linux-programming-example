@@ -3,15 +3,16 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     int pipefd[2];
+    // pipefd[0] refers to the read end of the pipe.
+    // pipefd[1] refers to the write end of the pipe. 
     pid_t cpid;
     char buf;
     if (argc != 2) {
-    fprintf(stderr, "Usage: %s <string>\n", argv[0]);
-    exit(EXIT_FAILURE);
+        fprintf(stderr, "Usage: %s <string>\n", argv[0]);
+        exit(EXIT_FAILURE);
     }
     if (pipe(pipefd) == -1) {
         perror("pipe");
@@ -24,11 +25,14 @@ main(int argc, char *argv[])
     }
     if (cpid == 0) {    /* Child reads from pipe */
         close(pipefd[1]);          /* Close unused write end */
+        // ssize_t read(int fd, void buf[.count], size_t count);
+        // read() attempts to read up to count bytes from file descriptor fd
+        // into the buffer starting at buf.
         while (read(pipefd[0], &buf, 1) > 0)
             write(STDOUT_FILENO, &buf, 1);
         write(STDOUT_FILENO, "\n", 1);
         close(pipefd[0]);
-        _exit(EXIT_SUCCESS);
+        exit(EXIT_SUCCESS);
     } else {            /* Parent writes argv[1] to pipe */
         close(pipefd[0]);          /* Close unused read end */
         write(pipefd[1], argv[1], strlen(argv[1]));
