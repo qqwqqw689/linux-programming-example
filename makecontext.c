@@ -31,12 +31,20 @@ int
 main(int argc, char *argv[])
 {
     char func1_stack[16384];
-    char func2_stack[16384]
+    char func2_stack[16384];
+    // int getcontext(ucontext_t *ucp);
+    // The function getcontext() initializes the structure pointed to by
+    // ucp to the currently active context.
     if (getcontext(&uctx_func1) == -1)
         handle_error("getcontext");
+    // uc_stack : Stack used for this context.
+    // ss_sp :  point to the base of the memory region allocated for the stack
+    // ss_size :  the size of the memory region
     uctx_func1.uc_stack.ss_sp = func1_stack;
     uctx_func1.uc_stack.ss_size = sizeof(func1_stack);
     uctx_func1.uc_link = &uctx_main;
+    // uctx_main : points to the context that will be resumed
+    // when the current context terminate
     makecontext(&uctx_func1, func1, 0);
 
     if (getcontext(&uctx_func2) == -1)
