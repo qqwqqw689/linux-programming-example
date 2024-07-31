@@ -45,6 +45,9 @@ main(int argc, char *argv[])
     uctx_func1.uc_link = &uctx_main;
     // uctx_main : points to the context that will be resumed
     // when the current context terminate
+
+    // void makecontext(ucontext_t *ucp, void (*func)(), int argc, ...);
+    // argc : the number of arguments.
     makecontext(&uctx_func1, func1, 0);
 
     if (getcontext(&uctx_func2) == -1)
@@ -56,6 +59,7 @@ main(int argc, char *argv[])
 
     makecontext(&uctx_func2, func2, 0);
     printf("%s: swapcontext(&uctx_main, &uctx_func2)\n", __func__);
+    // On error, swapcontext() returns -1 and sets errno appropriately.
     if (swapcontext(&uctx_main, &uctx_func2) == -1)
         handle_error("swapcontext");
 
